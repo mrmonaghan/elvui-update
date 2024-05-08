@@ -39,7 +39,7 @@ if ($existingInstall) {
     Where-Object { $_ -match '(?<=##\sVersion:\s).*'}
     switch($Matches.Length) {
         1 { 
-            $currentVersion = [System.Version]$Matches.0
+            $currentVersion = [System.Version]($Matches.0).Trim("v")
             Write-Host -ForegroundColor Yellow "Found existing ElvUI installation (version $currentVersion)..."
         }
         Default {
@@ -57,9 +57,9 @@ $getElvUiRequest = Invoke-WebRequest $baseUrl | ConvertFrom-Json
 $elvUIDirectories = $getElvUiRequest | Select-Object -ExpandProperty directories
 # capture the latest version string from the HTTP request
 $latestVersionStr = $getElvUiRequest | Select-Object -ExpandProperty version
+Write-Host "Latest version string: $latestVersionStr"
 # cast latest version to a System.Version for comparison
 $latestVersion = [System.Version]$latestVersionStr
-
 
 # back up current ElvUI directories
 if ($existingInstall) {
@@ -84,7 +84,7 @@ if ($existingInstall) {
     }
     Write-Host -ForegroundColor Yellow "Backup complete!"
 }
-
+    
 
 # capture the download URL from the download request response
 $downloadUrl = $getElvUiRequest | Select-Object -ExpandProperty url
