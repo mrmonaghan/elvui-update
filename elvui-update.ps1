@@ -39,6 +39,7 @@ if ($existingInstall) {
     Where-Object { $_ -match '(?<=##\sVersion:\s).*'}
     switch($Matches.Length) {
         1 { 
+            # trim leading "v" from the version string to enable proper parsing
             $currentVersion = [System.Version]($Matches.0).Trim("v")
             Write-Host -ForegroundColor Yellow "Found existing ElvUI installation (version $currentVersion)..."
         }
